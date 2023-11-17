@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\CalendarController;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\CategoryController;
@@ -52,3 +53,5 @@ Route::post('/show_time', [ShowTimeController::class, 'store']);
 Route::get('/show_time/{id}', [ShowTimeController::class, 'show']);
 Route::put('/show_time', [ShowTimeController::class, 'update']);
 Route::delete('/show_time/{id}', [ShowTimeController::class, 'destroy']);
+
+Route::get('calendar/{id}', [CalendarController::class, 'index']);
