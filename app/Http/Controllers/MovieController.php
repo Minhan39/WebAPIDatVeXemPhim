@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Category;
 use App\Models\Movie;
 use Illuminate\Http\Request;
 
@@ -18,6 +19,22 @@ class MovieController extends Controller
             $movie->language_list = explode(',', $movie->language_list);
             return $movie;
         });
+        return response()->json($movies);
+    }
+
+    public function get(int $category_id){
+        $movies = Movie::all();
+        $movies = $movies->filter(function($movie) use ($category_id) {
+            return in_array($category_id, explode(',', $movie->category_list));
+        });
+        $movies->map(function($movie){
+            $movie->category_list = explode(',', $movie->category_list);
+            $movie->actor_list = explode(',', $movie->actor_list);
+            $movie->language_list = explode(',', $movie->language_list);
+            return $movie;
+        });
+        $movies = $movies->values();
+        $movies->toArray();
         return response()->json($movies);
     }
 
@@ -51,6 +68,15 @@ class MovieController extends Controller
     public function show(int $id)
     {
         $movie = Movie::find($id);
+        $categories_id = explode(',', $movie->category_list);
+        $categories = Category::whereIn('id', $categories_id)->get();
+        $categories_name = [];
+        foreach($categories as $item){
+            $categories_name[] = $item->name;
+        }
+        $movie->category_list = $categories_name;
+        $movie->actor_list = explode(',', $movie->actor_list);
+        $movie->language_list = explode(',', $movie->language_list);
         return $movie;
     }
 

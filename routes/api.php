@@ -5,9 +5,11 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\CategoryController;
 use App\Http\Controllers\CinemaController;
+use App\Http\Controllers\ComboController;
 use App\Http\Controllers\MovieController;
 use App\Http\Controllers\OpenningDayController;
 use App\Http\Controllers\ShowTimeController;
+use App\Http\Controllers\TicketController;
 
 /*
 |--------------------------------------------------------------------------
@@ -25,12 +27,14 @@ Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
 });
 
 Route::get('/category', [CategoryController::class, 'index']);
+Route::get('/category/movie', [CategoryController::class, 'get']);
 Route::post('/category', [CategoryController::class, 'store']);
 Route::get('/category/{id}', [CategoryController::class, 'show']);
 Route::put('/category', [CategoryController::class, 'update']);
 Route::delete('/category/{id}', [CategoryController::class, 'destroy']);
 
 Route::get('/movie', [MovieController::class, 'index']);
+Route::get('/movie/category/{category_id}', [MovieController::class, 'get']);
 Route::post('/movie', [MovieController::class, 'store']);
 Route::get('/movie/{id}', [MovieController::class, 'show']);
 Route::put('/movie', [MovieController::class, 'update']);
@@ -54,4 +58,16 @@ Route::get('/show_time/{id}', [ShowTimeController::class, 'show']);
 Route::put('/show_time', [ShowTimeController::class, 'update']);
 Route::delete('/show_time/{id}', [ShowTimeController::class, 'destroy']);
 
-Route::get('calendar/{id}', [CalendarController::class, 'index']);
+Route::get('calendar/{date}', [CalendarController::class, 'index']);
+
+Route::get('/combo', [ComboController::class, 'index']);
+Route::post('/combo', [ComboController::class, 'store']);
+Route::get('/combo/{id}', [ComboController::class, 'show']);
+Route::put('/combo', [ComboController::class, 'update']);
+Route::delete('/combo/{id}', [ComboController::class, 'destroy']);
+
+Route::get('/ticket', [TicketController::class, 'index']);
+Route::post('/ticket', [TicketController::class, 'store']);
+Route::get('/ticket/{id}', [TicketController::class, 'show']);
+Route::put('/ticket', [TicketController::class, 'update']);
+Route::delete('/ticket/{id}', [TicketController::class, 'destroy']);

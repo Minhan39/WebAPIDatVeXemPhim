@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Models\Category;
+use App\Models\Movie;
 use Illuminate\Http\Request;
 
 class CategoryController extends Controller
@@ -14,6 +15,22 @@ class CategoryController extends Controller
     {
         $categories = Category::all();
         return response()->json($categories);
+    }
+
+    public function get(){
+        $categories = Category::all();
+        $movies_categories = collect();
+        foreach($categories as $item){
+            $movies = Movie::whereRaw("FIND_IN_SET(?, category_list)", [$item->id])->get();
+
+            $movies_categories[$item->id] = $movies->map(function($movie){
+                $movie->category_list = explode(',', $movie->category_list);
+                $movie->actor_list = explode(',', $movie->actor_list);
+                $movie->language_list = explode(',', $movie->language_list);
+                return $movie;
+            });
+        }
+        return response()->json($movies_categories);
     }
 
     /**
@@ -34,7 +51,7 @@ class CategoryController extends Controller
         ]);
         $category = Category::create($request->all());
         return response()->json([
-            'message' => 'category creted', 
+            'message' => 'category created', 
             'category' => $category
         ]);
     }
